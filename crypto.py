@@ -1,10 +1,12 @@
 import requests 
 import json
 import calendar
+from prettytable import PrettyTable as pt
+
 def getMonth(date):
 	x=int(date[5])*10+int(date[6])
-	return calendar.month_name[x]
-	#return calendar.month_name(int(date[5])*10+int(date[6]))
+	today=calendar.month_name[x]+" "+date[8]+date[9]+","+date[0]+date[1]+date[2]+date[3]
+	return today
 
 def getExchangeRates():
 	try:
@@ -18,11 +20,44 @@ def getExchangeRates():
 	except:
 		return False
 
+def getCoinMarketCap():
+	#globalURL = "https://api.coinmarketcap.com/v1/global/"
+	tickerURL = "https://api.coinmarketcap.com/v1/ticker/"
+	choice = input("Your choice: ")
+	#Pretty Table to format Output
+	xx = pt()
+	xx.field_names = ["Name (Symbols)", "Price (in INR)", "Change (1hr)", "Change (24hr)","Change (7days)"]
+	if choice == "all":
+		request = requests.get(tickerURL)
+		data = request.json()
+		for x in data:
+			CurrencyName=x['name']+" ("+x['symbol']+")"
+			#print(CurrencyName)
+			price_usd=x['price_usd']
+			price_usd=float("{0:.4f}".format(float(price_usd)))
+			#print(price_usd)
+			percent_change_1h = x['percent_change_1h'] = x['percent_change_1h']
+			#print(percent_change_1h)
+			percent_change_24h = x['percent_change_24h']
+			#print(percent_change_24h)
+			percent_change_7d = x['percent_change_7d']
+			#print(percent_change_7d)
+			xx.add_row([CurrencyName,price_usd,percent_change_1h,percent_change_24h,percent_change_7d])
+	else:
+		tickerURL += '/'+choice+'/'
+		request = requests.get(tickerURL)
+		data = request.json()
+		ticker = data[0]['symbol']
+		price = data[0]['price_usd']
+		print(ticker + ":\t\t$" + price)
+		print()
+	print(xx)
+
 data=getExchangeRates()
 if data!=False:
 	date=data['date']
 	rates=data['rates']
-	today=getMonth(date)+" "+date[8]+date[9]+","+date[0]+date[1]+date[2]+date[3]
+	today=getMonth(date)
 	#since the price of Cryptocurrencies is initially given in Dollors
 	inr=rates['INR']
 	usd=rates['USD']
@@ -31,7 +66,10 @@ if data!=False:
 	factor=float("{0:.4f}".format(factor))
 	print("Dated : "+today)
 	print("Exchange Rate today is : 1 USD = "+str(factor)+" INR")
+	getCoinMarketCap()
 
 else:
 	print("Can't Reach the Destination ...")
+
+
 
