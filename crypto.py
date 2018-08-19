@@ -3,8 +3,7 @@ import json
 import calendar
 def getMonth(date):
 	x=int(date[5])*10+int(date[6])
-	print("MOnth is :"+ str(x))
-	print(calendar.month_name[x])
+	return calendar.month_name[x]
 	#return calendar.month_name(int(date[5])*10+int(date[6]))
 
 def getExchangeRates():
@@ -23,10 +22,16 @@ data=getExchangeRates()
 if data!=False:
 	date=data['date']
 	rates=data['rates']
-	print(date)
-	month=getMonth(date)
-	print(month)
-	print(rates)
+	today=getMonth(date)+" "+date[8]+date[9]+","+date[0]+date[1]+date[2]+date[3]
+	#since the price of Cryptocurrencies is initially given in Dollors
+	inr=rates['INR']
+	usd=rates['USD']
+	#all exchange rates are given in relation to Euro
+	factor=inr/usd
+	factor=float("{0:.4f}".format(factor))
+	print("Dated : "+today)
+	print("Exchange Rate today is : 1 USD = "+str(factor)+" INR")
+
 else:
 	print("Can't Reach the Destination ...")
-	pass
+
