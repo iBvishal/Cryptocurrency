@@ -26,7 +26,7 @@ def getCoinMarketCap():
 	choice = input("Your choice: ")
 	#Pretty Table to format Output
 	xx = pt()
-	xx.field_names = ["Name (Symbols)", "Price (in INR)", "Change (1hr)", "Change (24hr)","Change (7days)"]
+	xx.field_names = ["Name (Symbols)", "Price (in USD)", "Change (1hr)", "Change (24hr)","Change (7days)"]
 	if choice == "all":
 		request = requests.get(tickerURL)
 		data = request.json()
@@ -51,25 +51,39 @@ def getCoinMarketCap():
 		price = data[0]['price_usd']
 		print(ticker + ":\t\t$" + price)
 		print()
-	print(xx)
+	return xx
 
-data=getExchangeRates()
-if data!=False:
-	date=data['date']
-	rates=data['rates']
-	today=getMonth(date)
-	#since the price of Cryptocurrencies is initially given in Dollors
-	inr=rates['INR']
-	usd=rates['USD']
-	#all exchange rates are given in relation to Euro
-	factor=inr/usd
-	factor=float("{0:.4f}".format(factor))
-	print("Dated : "+today)
-	print("Exchange Rate today is : 1 USD = "+str(factor)+" INR")
-	getCoinMarketCap()
+def DriverMenu():
+	print("Choose Suitable Option : \n1. Get Status of Single Cryptocurrency\n2. Fetch top 100 Cryptocurrencies\n3. Find Best Investment")
+	choice=input()
+	if input==1:
+		pass
+	elif input==2:
+		pass
+	elif input==3:
+		pass
+	else:
+		print("Enter a Valid Input ...")	
 
-else:
-	print("Can't Reach the Destination ...")
+def main():
+	# data=getExchangeRates()
+	# if data!=False:
+	# 	date=data['date']
+	# 	rates=data['rates']
+	# 	today=getMonth(date)
+	# 	#since the price of Cryptocurrencies is initially given in Dollors
+	# 	inr=rates['INR']
+	# 	usd=rates['USD']
+	# 	#all exchange rates are given in relation to Euro
+	# 	factor=inr/usd
+	# 	factor=float("{0:.4f}".format(factor))
+	# 	print("Dated : "+today)
+	# 	print("Exchange Rate today is : 1 USD = "+str(factor)+" INR")
+	# 	coinCap = getCoinMarketCap()
+	# 	bestInvestment = getBestInvestment(coinCap)
+	# else:
+	# 	print("Can't Reach the Destination ...")
+	DriverMenu()
 
-
-
+if __name__ == '__main__':
+	main()
